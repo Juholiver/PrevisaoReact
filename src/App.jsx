@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react'
 import axios from 'axios'
+import WeatherInfo from './components/WeatherInfo/WeatherInfo'
 
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [weather, setWeather] = useState({})
   const inputRef = useRef()
 
     async function searchCity(){
@@ -14,8 +15,9 @@ function App() {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&lang=pt_br&units=metric`
   
     try {
-      const data = await axios.get(url)
-      console.log(data)
+      const apiInfo = await axios.get(url)
+      setWeather(apiInfo.data)
+      console.log(apiInfo.data)
     } catch (error) {
       console.log(error)
     }
@@ -26,6 +28,8 @@ function App() {
   <h1>Previsão do Tempo</h1>
   <input ref={inputRef} type="text" placeholder="Digite a cidade"></input>
   <button onClick={searchCity}>Buscar</button>
+
+  <WeatherInfo weather={weather} />
 </div>
   )
 }
