@@ -1,23 +1,27 @@
 import { useState, useRef } from 'react'
 import axios from 'axios'
 import WeatherInfo from './components/WeatherInfo/WeatherInfo'
+import WeatherInfoFiveDays from './components/WeatherInfoFiveDays/WeatherInfoFiveDays'
 
 import './App.css'
 
 function App() {
   const [weather, setWeather] = useState()
+  const [weatherFiveDays, setWeatherFiveDays] = useState()
   const inputRef = useRef()
 
     async function searchCity(){
-    console.log(inputRef.current.value)
     const city = inputRef.current.value
     const key = "0ba11199028d166431e519372816ff08"
+
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&lang=pt_br&units=metric`
+    const urlFiveDays = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&lang=pt_br&units=metric`
   
     try {
       const apiInfo = await axios.get(url)
+      const apiInfoFiveDays = await axios.get(urlFiveDays)
       setWeather(apiInfo.data)
-      console.log(apiInfo.data)
+      setWeatherFiveDays(apiInfoFiveDays.data)
     } catch (error) {
       console.log(error)
     }
@@ -30,6 +34,7 @@ function App() {
   <button onClick={searchCity}>Buscar</button>
 
   {weather && <WeatherInfo weather={weather} />}
+  {weatherFiveDays && <WeatherInfoFiveDays weatherFiveDays={weatherFiveDays} />}
 </div>
   )
 }
